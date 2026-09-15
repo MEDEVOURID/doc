@@ -1,0 +1,4 @@
+{
+  "note": "GeoJSON data is inlined in js/maps.js for local file:// compatibility",
+  "source": "Simplified boundaries for educational purposes"
+}

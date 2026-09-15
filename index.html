@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Site éducatif interactif sur la Chine, puissance économique mondiale — Géographie">
+  <meta name="author" content="Projet Éducatif">
+  <meta property="og:title" content="La Chine : Puissance Économique Mondiale">
+  <meta property="og:description" content="Explorez la géographie économique de la Chine à travers des cartes interactives avec zoom">
+  <title>La Chine : Puissance Économique Mondiale</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700;800&family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <!-- AOS (Animate On Scroll) CSS -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============================================ -->
+  <!-- TOP HEADER BAR -->
+  <!-- ============================================ -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <i class="bi bi-globe-americas header-logo"></i>
+        <div class="header-titles">
+          <h1 class="header-title" data-i18n="siteTitle">La Chine : Puissance Économique Mondiale</h1>
+          <p class="header-subtitle" data-i18n="siteSubtitle">Site éducatif interactif — Géographie</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <span class="badge-subject" data-i18n="subject">Matière : Géographie</span>
+        <span class="badge-module" data-i18n="module">Module II — Unité 3</span>
+      </div>
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="fr" title="Français">🇫🇷 FR</button>
+        <button class="lang-btn" data-lang="en" title="English">🇬🇧 EN</button>
+        <button class="lang-btn" data-lang="ar" title="العربية">🇸🇦 AR</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================ -->
+  <!-- SIDEBAR NAVIGATION -->
+  <!-- ============================================ -->
+  <nav class="nav-sidebar" id="nav-sidebar" aria-label="Main navigation">
+    <ul class="nav-list">
+      <li>
+        <a href="#hero-section" class="nav-link active" data-section="hero-section">
+          <i class="bi bi-rocket-takeoff"></i>
+          <span data-i18n="navIntro">Introduction</span>
+        </a>
+      </li>
+      <li>
+        <a href="#axis1-section" class="nav-link" data-section="axis1-section">
+          <i class="bi bi-building-gear"></i>
+          <span data-i18n="navAxis1">Axe 1 : Industries</span>
+        </a>
+      </li>
+      <li>
+        <a href="#axis2-section" class="nav-link" data-section="axis2-section">
+          <i class="bi bi-tree"></i>
+          <span data-i18n="navAxis2">Axe 2 : Agriculture</span>
+        </a>
+      </li>
+      <li>
+        <a href="#axis3-section" class="nav-link" data-section="axis3-section">
+          <i class="bi bi-truck"></i>
+          <span data-i18n="navAxis3">Axe 3 : Commerce</span>
+        </a>
+      </li>
+      <li>
+        <a href="#stats-section" class="nav-link" data-section="stats-section">
+          <i class="bi bi-bar-chart-line"></i>
+          <span data-i18n="navStats">Statistiques</span>
+        </a>
+      </li>
+      <li>
+        <a href="#glossary-section" class="nav-link" data-section="glossary-section">
+          <i class="bi bi-book"></i>
+          <span data-i18n="navGlossary">Glossaire</span>
+        </a>
+      </li>
+      <li>
+        <a href="#references-section" class="nav-link" data-section="references-section">
+          <i class="bi bi-journal-text"></i>
+          <span data-i18n="navReferences">Références</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- ============================================ -->
+  <!-- MAIN CONTENT -->
+  <!-- ============================================ -->
+  <main class="main-content" id="main-content">
+
+    <!-- ====== HERO SECTION ====== -->
+    <section id="hero-section" class="hero-section">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-badge">
+          <i class="bi bi-geo-alt-fill"></i>
+          <span data-i18n="subject">Matière : Géographie</span>
+        </div>
+        <h2 class="hero-title" data-aos="fade-up" data-i18n="heroTitle">La Chine, Puissance Économique Mondiale</h2>
+        <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200" data-i18n="heroSubtitle">
+          Découvrez la géographie économique de la Chine à travers des cartes interactives
+        </p>
+        <a href="#intro-section" class="hero-btn" data-aos="fade-up" data-aos-delay="400">
+          <span data-i18n="heroBtn">Commencer l'exploration</span>
+          <i class="bi bi-arrow-down-circle"></i>
+        </a>
+      </div>
+      <div class="hero-scroll-indicator">
+        <div class="scroll-arrow"></div>
+      </div>
+    </section>
+
+    <!-- ====== INTRO SECTION ====== -->
+    <section id="intro-section" class="content-section">
+      <div class="container">
+        <h2 class="section-title" data-aos="fade-right">
+          <i class="bi bi-info-circle"></i>
+          <span data-i18n="introTitle">Introduction</span>
+        </h2>
+        <p class="section-text" data-aos="fade-up" data-i18n="introText">
+          La Chine est devenue la deuxième puissance économique mondiale. Son développement économique repose sur une industrialisation massive, une agriculture diversifiée et un commerce international en pleine expansion. Ce site éducatif vous permet d'explorer les différentes facettes de la puissance économique chinoise à travers des cartes interactives et des données actualisées.
+        </p>
+
+        <div class="row g-4 mt-4">
+          <!-- Card: Industry -->
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="info-card intro-card">
+              <div class="feature-icon">
+                <i class="bi bi-building-gear"></i>
+              </div>
+              <h3 data-i18n="introCard1Title">Industrie</h3>
+              <p data-i18n="introCard1Text">Des zones économiques spéciales aux mégapoles industrielles, découvrez la répartition géographique de l'industrie chinoise.</p>
+              <a href="#axis1-section" class="card-link">
+                <span data-i18n="showMore">En savoir plus</span> <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+          <!-- Card: Agriculture -->
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="info-card intro-card">
+              <div class="feature-icon accent">
+                <i class="bi bi-tree"></i>
+              </div>
+              <h3 data-i18n="introCard2Title">Agriculture</h3>
+              <p data-i18n="introCard2Text">Du riz au blé, des oasis aux pâturages, explorez la diversité des zones agricoles chinoises.</p>
+              <a href="#axis2-section" class="card-link">
+                <span data-i18n="showMore">En savoir plus</span> <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+          <!-- Card: Commerce -->
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="info-card intro-card">
+              <div class="feature-icon secondary">
+                <i class="bi bi-truck"></i>
+              </div>
+              <h3 data-i18n="introCard3Title">Commerce</h3>
+              <p data-i18n="introCard3Text">La Chine est le premier exportateur mondial. Analysez ses partenaires et ses routes commerciales.</p>
+              <a href="#axis3-section" class="card-link">
+                <span data-i18n="showMore">En savoir plus</span> <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== AXIS 1: INDUSTRIAL ZONES ====== -->
+    <section id="axis1-section" class="content-section bg-alt">
+      <div class="container">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+          <h2 class="section-title mb-0" data-aos="fade-right">
+            <i class="bi bi-building-gear"></i>
+            <span data-i18n="axis1Title">Axe 1 : Les Zones Industrielles en Chine</span>
+          </h2>
+          <span class="badge bg-danger px-3 py-2 rounded-pill fs-6" data-i18n="axis1Doc">Document 5 : Carte des zones industrielles en Chine</span>
+        </div>
+        <p class="section-subtitle" data-aos="fade-up" data-i18n="axis1Subtitle">
+          Répartition géographique des régions industrielles
+        </p>
+
+        <div class="row g-4 mt-2">
+          <!-- Map Column -->
+          <div class="col-lg-8" data-aos="fade-right">
+            <div class="map-wrapper">
+              <div class="map-title d-flex justify-content-between align-items-center">
+                <div>
+                  <i class="bi bi-map"></i>
+                  <span data-i18n="axis1MapTitle">Carte Interactive — Zones Industrielles</span>
+                </div>
+                <div class="badge bg-light text-dark fs-7" style="font-weight: 500;">
+                  <i class="bi bi-zoom-in text-danger"></i> <span data-i18n="zoomHint">Utilisez la molette ou +/- pour zoomer</span>
+                </div>
+              </div>
+              <div class="map-container" id="industrial-map" role="application" aria-label="Interactive industrial zones map of China"></div>
+            </div>
+          </div>
+
+          <!-- Questions Column -->
+          <div class="col-lg-4" data-aos="fade-left">
+            <div class="question-panel">
+              <h4 class="question-panel-title">
+                <i class="bi bi-question-circle"></i>
+                <span data-i18n="questions">Questions</span>
+              </h4>
+
+              <!-- Q1 -->
+              <div class="question-card flex-column" data-aos="fade-up" data-aos-delay="100">
+                <div class="d-flex align-items-start gap-2 w-100">
+                  <span class="question-number">Q1</span>
+                  <p data-i18n="axis1Q1">1- Décri(vez) la répartition géographique des zones industrielles en Chine.</p>
+                </div>
+                <button class="btn btn-sm btn-outline-danger mt-2 align-self-start btn-reveal" data-target="ans-axis1-q1">
+                  <i class="bi bi-lightbulb"></i> <span data-i18n="btnShowAnswer">Afficher l'explication pédagogique</span>
+                </button>
+                <div class="answer-box mt-2 p-2 rounded bg-white border border-danger-subtle d-none" id="ans-axis1-q1">
+                  <small class="text-secondary" data-i18n="axis1A1">L'industrie chinoise se caractérise par une forte concentration spatiale sur la façade maritime orientale...</small>
+                </div>
+              </div>
+
+              <!-- Q2 -->
+              <div class="question-card flex-column" data-aos="fade-up" data-aos-delay="200">
+                <div class="d-flex align-items-start gap-2 w-100">
+                  <span class="question-number">Q2</span>
+                  <p data-i18n="axis1Q2">2- Nomm(ez) les industries de base en Chine, en citant les principaux centres industriels.</p>
+                </div>
+                <button class="btn btn-sm btn-outline-danger mt-2 align-self-start btn-reveal" data-target="ans-axis1-q2">
+                  <i class="bi bi-lightbulb"></i> <span data-i18n="btnShowAnswer">Afficher l'explication pédagogique</span>
+                </button>
+                <div class="answer-box mt-2 p-2 rounded bg-white border border-danger-subtle d-none" id="ans-axis1-q2">
+                  <small class="text-secondary" data-i18n="axis1A2">Les industries de base comprennent la sidérurgie (Anshan, Wuhan), la chimie et la pétrochimie...</small>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Info Cards Row -->
+        <div class="row g-4 mt-4">
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="info-card">
+              <div class="info-card-header primary">
+                <i class="bi bi-geo-alt-fill"></i>
+              </div>
+              <h4 data-i18n="axis1Info1Title">Côte Est Industrielle</h4>
+              <p data-i18n="axis1Info1Text">La majorité de l'industrie chinoise est concentrée sur la côte est, de la Mandchourie au delta de la rivière des Perles.</p>
+            </div>
+          </div>
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="info-card">
+              <div class="info-card-header accent">
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <h4 data-i18n="axis1Info2Title">Zones Économiques Spéciales</h4>
+              <p data-i18n="axis1Info2Text">Créées à partir de 1980, les ZES comme Shenzhen, Zhuhai, Shantou et Xiamen ont attiré les investissements étrangers.</p>
+            </div>
+          </div>
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="info-card">
+              <div class="info-card-header secondary">
+                <i class="bi bi-clock-history"></i>
+              </div>
+              <h4 data-i18n="axis1Info3Title">Héritage Maoïste</h4>
+              <p data-i18n="axis1Info3Text">Pendant la période maoïste (1949-1976), l'industrialisation s'est concentrée sur l'industrie lourde dans le nord-est.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== AXIS 2: AGRICULTURAL ZONES ====== -->
+    <section id="axis2-section" class="content-section">
+      <div class="container">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+          <h2 class="section-title mb-0" data-aos="fade-right">
+            <i class="bi bi-tree"></i>
+            <span data-i18n="axis2Title">Axe 2 : Les Zones Agricoles en Chine</span>
+          </h2>
+          <span class="badge bg-success px-3 py-2 rounded-pill fs-6" data-i18n="axis2Doc">Document 3 : Carte des zones agricoles en Chine</span>
+        </div>
+        <p class="section-subtitle" data-aos="fade-up" data-i18n="axis2Subtitle">
+          Répartition géographique des régions agricoles
+        </p>
+
+        <div class="row g-4 mt-2">
+          <!-- Map Column -->
+          <div class="col-lg-8" data-aos="fade-right">
+            <div class="map-wrapper">
+              <div class="map-title d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #1e8449 0%, #27ae60 100%);">
+                <div>
+                  <i class="bi bi-map"></i>
+                  <span data-i18n="axis2MapTitle">Carte Interactive — Zones Agricoles</span>
+                </div>
+                <div class="badge bg-light text-dark fs-7" style="font-weight: 500;">
+                  <i class="bi bi-zoom-in text-success"></i> <span data-i18n="zoomHint">Utilisez la molette ou +/- pour zoomer</span>
+                </div>
+              </div>
+              <div class="map-container" id="agricultural-map" role="application" aria-label="Interactive agricultural zones map of China"></div>
+            </div>
+          </div>
+
+          <!-- Questions Column -->
+          <div class="col-lg-4" data-aos="fade-left">
+            <div class="question-panel">
+              <h4 class="question-panel-title">
+                <i class="bi bi-question-circle"></i>
+                <span data-i18n="questions">Questions</span>
+              </h4>
+
+              <!-- Q1 -->
+              <div class="question-card flex-column" data-aos="fade-up" data-aos-delay="100">
+                <div class="d-flex align-items-start gap-2 w-100">
+                  <span class="question-number">Q1</span>
+                  <p data-i18n="axis2Q1">1- Identifi(ez) les principales régions agricoles de la Chine en vous basant sur la carte.</p>
+                </div>
+                <button class="btn btn-sm btn-outline-success mt-2 align-self-start btn-reveal" data-target="ans-axis2-q1">
+                  <i class="bi bi-lightbulb"></i> <span data-i18n="btnShowAnswer">Afficher l'explication pédagogique</span>
+                </button>
+                <div class="answer-box mt-2 p-2 rounded bg-white border border-success-subtle d-none" id="ans-axis2-q1">
+                  <small class="text-secondary" data-i18n="axis2A1">Les grandes régions agricoles sont : 1) La zone pastorale de l'Ouest...</small>
+                </div>
+              </div>
+
+              <!-- Q2 -->
+              <div class="question-card flex-column" data-aos="fade-up" data-aos-delay="200">
+                <div class="d-flex align-items-start gap-2 w-100">
+                  <span class="question-number">Q2</span>
+                  <p data-i18n="axis2Q2">2- Distingu(ez) les produits agricoles propres à chaque région de la Chine.</p>
+                </div>
+                <button class="btn btn-sm btn-outline-success mt-2 align-self-start btn-reveal" data-target="ans-axis2-q2">
+                  <i class="bi bi-lightbulb"></i> <span data-i18n="btnShowAnswer">Afficher l'explication pédagogique</span>
+                </button>
+                <div class="answer-box mt-2 p-2 rounded bg-white border border-success-subtle d-none" id="ans-axis2-q2">
+                  <small class="text-secondary" data-i18n="axis2A2">Au Nord : blé, maïs, soja, betterave à sucre. Au Sud : riz...</small>
+                </div>
+              </div>
+
+              <!-- Q3 -->
+              <div class="question-card flex-column" data-aos="fade-up" data-aos-delay="300">
+                <div class="d-flex align-items-start gap-2 w-100">
+                  <span class="question-number">Q3</span>
+                  <p data-i18n="axis2Q3">3- Décri(vez) la répartition géographique des zones agricoles en Chine.</p>
+                </div>
+                <button class="btn btn-sm btn-outline-success mt-2 align-self-start btn-reveal" data-target="ans-axis2-q3">
+                  <i class="bi bi-lightbulb"></i> <span data-i18n="btnShowAnswer">Afficher l'explication pédagogique</span>
+                </button>
+                <div class="answer-box mt-2 p-2 rounded bg-white border border-success-subtle d-none" id="ans-axis2-q3">
+                  <small class="text-secondary" data-i18n="axis2A3">L'agriculture chinoise est divisée en deux grands ensembles séparés par la ligne d'aridité...</small>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Info Cards Row -->
+        <div class="row g-4 mt-4">
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="info-card">
+              <div class="info-card-header" style="background: #27ae60;">
+                <i class="bi bi-droplet-fill"></i>
+              </div>
+              <h4 data-i18n="axis2Info1Title">Le Grenier à Riz du Sud</h4>
+              <p data-i18n="axis2Info1Text">Le sud de la Chine, grâce à son climat subtropical, est le principal producteur de riz au monde.</p>
+            </div>
+          </div>
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="info-card">
+              <div class="info-card-header" style="background: #f1c40f;">
+                <i class="bi bi-brightness-high-fill"></i>
+              </div>
+              <h4 data-i18n="axis2Info2Title">La Ceinture de Blé du Nord</h4>
+              <p data-i18n="axis2Info2Text">Les plaines du nord produisent du blé, du maïs et du soja. La province du Henan est le premier producteur de blé.</p>
+            </div>
+          </div>
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="info-card">
+              <div class="info-card-header" style="background: #e74c3c;">
+                <i class="bi bi-flower1"></i>
+              </div>
+              <h4 data-i18n="axis2Info3Title">Les Oasis de l'Ouest</h4>
+              <p data-i18n="axis2Info3Text">Dans les régions arides de l'ouest, l'agriculture se pratique dans les oasis, avec la culture du coton et des fruits secs.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== AXIS 3: TRADE & COMMERCE ====== -->
+    <section id="axis3-section" class="content-section bg-alt">
+      <div class="container">
+        <h2 class="section-title" data-aos="fade-right">
+          <i class="bi bi-truck"></i>
+          <span data-i18n="axis3Title">Axe 3 : Commerce et Échanges Internationaux</span>
+        </h2>
+        <p class="section-subtitle" data-aos="fade-up" data-i18n="axis3Subtitle">
+          La Chine dans le commerce mondial
+        </p>
+
+        <div class="row g-4 mt-4">
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="info-card trade-card">
+              <div class="info-card-header primary">
+                <i class="bi bi-globe2"></i>
+              </div>
+              <h4 data-i18n="axis3Info1Title">Premier Exportateur Mondial</h4>
+              <p data-i18n="axis3Info1Text">La Chine est le premier exportateur mondial de biens, représentant environ 15% des exportations mondiales.</p>
+            </div>
+          </div>
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="info-card trade-card">
+              <div class="info-card-header" style="background: #8e44ad;">
+                <i class="bi bi-signpost-split-fill"></i>
+              </div>
+              <h4 data-i18n="axis3Info2Title">La Nouvelle Route de la Soie</h4>
+              <p data-i18n="axis3Info2Text">L'initiative "Ceinture et Route" lancée en 2013 renforce les connexions commerciales entre la Chine et le monde.</p>
+            </div>
+          </div>
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="info-card trade-card">
+              <div class="info-card-header accent">
+                <i class="bi bi-people-fill"></i>
+              </div>
+              <h4 data-i18n="axis3Info3Title">Partenaires Commerciaux</h4>
+              <p data-i18n="axis3Info3Text">Les principaux partenaires commerciaux : États-Unis, UE, ASEAN, Japon et Corée du Sud.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== STATISTICS SECTION ====== -->
+    <section id="stats-section" class="content-section stats-section">
+      <div class="container">
+        <h2 class="section-title light" data-aos="fade-right">
+          <i class="bi bi-bar-chart-line"></i>
+          <span data-i18n="statsTitle">Statistiques Clés</span>
+        </h2>
+
+        <div class="row g-4 mt-4">
+          <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+            <div class="stat-card">
+              <i class="bi bi-cash-stack stat-icon"></i>
+              <div class="stat-value counter" data-target="17963">0</div>
+              <div class="stat-label" data-i18n="statGDP">PIB (milliards USD)</div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+            <div class="stat-card">
+              <i class="bi bi-box-seam stat-icon"></i>
+              <div class="stat-value counter" data-target="3594">0</div>
+              <div class="stat-label" data-i18n="statExports">Exportations (milliards USD)</div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+            <div class="stat-card">
+              <i class="bi bi-people-fill stat-icon"></i>
+              <div class="stat-value">
+                <span class="counter" data-target="141">0</span>
+                <span class="stat-unit"> Mrd</span>
+              </div>
+              <div class="stat-label" data-i18n="statPopulation">Population (milliards)</div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="400">
+            <div class="stat-card">
+              <i class="bi bi-graph-up-arrow stat-icon"></i>
+              <div class="stat-value">
+                <span class="counter" data-target="52">0</span>
+                <span class="stat-unit">%</span>
+              </div>
+              <div class="stat-label" data-i18n="statGrowth">Croissance du PIB (%)</div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="500">
+            <div class="stat-card">
+              <i class="bi bi-building-gear stat-icon"></i>
+              <div class="stat-value">
+                <span class="counter" data-target="383">0</span>
+                <span class="stat-unit">%</span>
+              </div>
+              <div class="stat-label" data-i18n="statIndustry">Part de l'industrie dans le PIB (%)</div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="600">
+            <div class="stat-card">
+              <i class="bi bi-tree stat-icon"></i>
+              <div class="stat-value">
+                <span class="counter" data-target="71">0</span>
+                <span class="stat-unit">%</span>
+              </div>
+              <div class="stat-label" data-i18n="statAgriculture">Part de l'agriculture dans le PIB (%)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== GLOSSARY SECTION ====== -->
+    <section id="glossary-section" class="content-section">
+      <div class="container">
+        <h2 class="section-title" data-aos="fade-right">
+          <i class="bi bi-book"></i>
+          <span data-i18n="glossaryTitle">Glossaire</span>
+        </h2>
+
+        <div class="glossary-grid" id="glossary-container" data-aos="fade-up">
+          <!-- Glossary items are populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== REFERENCES SECTION ====== -->
+    <section id="references-section" class="content-section bg-alt">
+      <div class="container">
+        <h2 class="section-title" data-aos="fade-right">
+          <i class="bi bi-journal-text"></i>
+          <span data-i18n="referencesTitle">Références et Ressources</span>
+        </h2>
+
+        <div class="references-container" id="references-container" data-aos="fade-up">
+          <!-- References are populated by JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================ -->
+  <!-- FOOTER -->
+  <!-- ============================================ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-info">
+          <i class="bi bi-globe-americas"></i>
+          <span data-i18n="footerText">Site éducatif — Géographie : La Chine, puissance économique mondiale</span>
+        </div>
+        <div class="footer-copy">
+          <span data-i18n="footerCopyright">© 2024 — Projet Éducatif</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================ -->
+  <!-- SCRIPTS -->
+  <!-- ============================================ -->
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- AOS JS -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+  <!-- Application Scripts -->
+  <script src="js/translations.js"></script>
+  <script src="js/maps.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
