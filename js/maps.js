@@ -25,29 +25,80 @@
   var agriculturalMap = null;
   var industrialLegend = null;
   var agriculturalLegend = null;
+  
+  window.mapLayers = { industrial: {}, agricultural: {} };
 
-  // Base tile layers configurations (100% compatible with file:// and educational sites)
+  window.highlightMapLayer = function(mapType, layerId) {
+    var map = mapType === 'industrial' ? industrialMap : agriculturalMap;
+    var layers = window.mapLayers[mapType][layerId];
+    if (!map || !layers) return;
+
+    var bounds = L.latLngBounds();
+    var hasBounds = false;
+
+    var layersArray = Array.isArray(layers) ? layers : [layers];
+
+    layersArray.forEach(function(layer) {
+      if (layer.getBounds) {
+        bounds.extend(layer.getBounds());
+        hasBounds = true;
+      } else if (layer.getLatLng) {
+        bounds.extend([layer.getLatLng()]);
+        hasBounds = true;
+      }
+
+      if (layer.setStyle && layer.options) {
+        var originalColor = layer.options.fillColor;
+        var originalBorder = layer.options.color;
+        var originalOpacity = layer.options.fillOpacity;
+        var originalWeight = layer.options.weight;
+        
+        layer.setStyle({ fillOpacity: 0.9, weight: 4, color: '#ffff00', fillColor: '#ffff00' });
+        setTimeout(function() {
+          layer.setStyle({ fillOpacity: originalOpacity, weight: originalWeight, color: originalBorder, fillColor: originalColor });
+        }, 1500);
+      } else if (layer._icon) {
+        // Simple bounce effect for markers
+        layer._icon.style.transition = 'transform 0.3s ease';
+        layer._icon.style.transform = 'translateY(-15px)';
+        setTimeout(function() {
+          layer._icon.style.transform = '';
+        }, 300);
+      }
+    });
+
+    if (hasBounds) {
+      map.fitBounds(bounds, { padding: [30, 30], maxZoom: 6, animate: true });
+    }
+  };
+
+  // Base tile layers configurations (Using Google Maps)
   function createBaseLayers() {
-    var voyager = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
-      subdomains: 'abcd',
+    var googleRoad = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      attribution: '&copy; Google Maps',
       maxZoom: 19
     });
 
-    var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles &copy; Esri &mdash; Earthstar Geographics',
-      maxZoom: 18
+    var googleSatellite = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+      attribution: '&copy; Google Maps',
+      maxZoom: 19
     });
 
-    var topo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles &copy; Esri &mdash; USGS, Intermap, PC, NRCAN',
-      maxZoom: 18
+    var googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+      attribution: '&copy; Google Maps',
+      maxZoom: 19
+    });
+
+    var googleTerrain = L.tileLayer('https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+      attribution: '&copy; Google Maps',
+      maxZoom: 19
     });
 
     return {
-      voyager: voyager,
-      satellite: satellite,
-      topo: topo
+      voyager: googleRoad,
+      satellite: googleSatellite,
+      hybrid: googleHybrid,
+      topo: googleTerrain
     };
   }
 
@@ -358,14 +409,16 @@
     // Layer switcher
     var currentLang = getCurrentLang();
     var layerLabels = {
-      voyager: currentLang === 'ar' ? 'خريطة تفاعلية (Voyager)' : (currentLang === 'en' ? 'Geographic Map (Voyager)' : 'Carte géographique (Voyager)'),
+      voyager: currentLang === 'ar' ? 'خريطة جوجل (Google Maps)' : (currentLang === 'en' ? 'Google Maps (Road)' : 'Carte géographique (Google)'),
       satellite: currentLang === 'ar' ? 'قمر صناعي (Satellite)' : (currentLang === 'en' ? 'Satellite Imagery' : 'Image Satellite'),
-      topo: currentLang === 'ar' ? 'تضاريس (Relief)' : (currentLang === 'en' ? 'Topography & Relief' : 'Relief Topographique')
+      hybrid: currentLang === 'ar' ? 'هجين (Hybrid)' : (currentLang === 'en' ? 'Hybrid (Sat + Roads)' : 'Hybride (Sat + Routes)'),
+      topo: currentLang === 'ar' ? 'تضاريس (Terrain)' : (currentLang === 'en' ? 'Topography & Relief' : 'Relief Topographique')
     };
 
     var baseMaps = {};
     baseMaps[layerLabels.voyager] = baseLayers.voyager;
     baseMaps[layerLabels.satellite] = baseLayers.satellite;
+    baseMaps[layerLabels.hybrid] = baseLayers.hybrid;
     baseMaps[layerLabels.topo] = baseLayers.topo;
 
     L.control.layers(baseMaps, null, { position: 'topright' }).addTo(industrialMap);
@@ -386,9 +439,12 @@
 
       polygon.on('mouseover', function () { this.setStyle({ fillOpacity: 0.78, weight: 3 }); });
       polygon.on('mouseout', function () { this.setStyle({ fillOpacity: 0.52, weight: 2 }); });
+      
+      window.mapLayers.industrial[reg.id] = polygon;
     });
 
     // Add diversified industrial poles
+    window.mapLayers.industrial['poles'] = [];
     mapData.industrialPoles.forEach(function (pole) {
       var circle = L.circle(pole.coords, {
         radius: pole.radius * 2,
@@ -402,9 +458,16 @@
       circle.bindTooltip(
         '<strong>' + pole.name[currentLang] + '</strong><br>' + pole.desc[currentLang]
       );
+      
+      window.mapLayers.industrial['poles'].push(circle);
     });
 
     // Add industry points / cities
+    window.mapLayers.industrial['steel'] = [];
+    window.mapLayers.industrial['chemical'] = [];
+    window.mapLayers.industrial['mechanical'] = [];
+    window.mapLayers.industrial['hightech'] = [];
+    
     mapData.industrialCities.forEach(function (city) {
       var info = getIndustryIcon(city.type);
       var customIcon = L.divIcon({
@@ -421,6 +484,8 @@
         '<span style="color:#333;">' + city.sector[currentLang] + '</span>' +
         '</div>'
       );
+      
+      window.mapLayers.industrial[city.type].push(marker);
     });
 
     // Add Legend
@@ -442,20 +507,20 @@
     var title = t.legendIndustrial || (lang === 'ar' ? 'المفتاح' : 'Légende');
 
     var html = '<h4>' + title + '</h4>';
-    html += '<div class="legend-item"><span style="background:#8e44ad; width:16px; height:16px; display:inline-block; border-radius:3px; margin-right:8px; vertical-align:middle;"></span> ' +
+    html += '<div class="legend-item" style="cursor:pointer;" onclick="window.highlightMapLayer(\'industrial\', \'colonial\')"><span style="background:#8e44ad; width:16px; height:16px; display:inline-block; border-radius:3px; margin-right:8px; vertical-align:middle;"></span> ' +
             (lang === 'ar' ? 'صناعات قديمة مرتبطة بالاستعمار الياباني' : (lang === 'en' ? 'Old industries (Japanese colonization)' : 'Industries liées à la colonisation japonaise')) + '</div>';
-    html += '<div class="legend-item"><span style="background:#16a085; width:16px; height:16px; display:inline-block; border-radius:3px; margin-right:8px; vertical-align:middle;"></span> ' +
+    html += '<div class="legend-item" style="cursor:pointer;" onclick="window.highlightMapLayer(\'industrial\', \'maoist\')"><span style="background:#16a085; width:16px; height:16px; display:inline-block; border-radius:3px; margin-right:8px; vertical-align:middle;"></span> ' +
             (lang === 'ar' ? 'صناعات قديمة خلال الفترة الماوية (1949-1976)' : (lang === 'en' ? 'Maoist era industries (1949-1976)' : 'Industries de l\'ère maoïste (1949-1976)')) + '</div>';
-    html += '<div class="legend-item"><span style="background:#f39c12; width:16px; height:16px; display:inline-block; border-radius:3px; margin-right:8px; vertical-align:middle;"></span> ' +
+    html += '<div class="legend-item" style="cursor:pointer;" onclick="window.highlightMapLayer(\'industrial\', \'modern\')"><span style="background:#f39c12; width:16px; height:16px; display:inline-block; border-radius:3px; margin-right:8px; vertical-align:middle;"></span> ' +
             (lang === 'ar' ? 'صناعات حديثة مرتبطة بفترة الانفتاح (ZES)' : (lang === 'en' ? 'Modern opening-up zones (SEZ)' : 'Industries modernes de l\'ouverture (ZES)')) + '</div>';
-    html += '<div class="legend-item"><span style="border:2px dashed #c0392b; width:16px; height:16px; display:inline-block; border-radius:50%; margin-right:8px; vertical-align:middle;"></span> ' +
+    html += '<div class="legend-item" style="cursor:pointer;" onclick="window.highlightMapLayer(\'industrial\', \'poles\')"><span style="border:2px dashed #c0392b; width:16px; height:16px; display:inline-block; border-radius:50%; margin-right:8px; vertical-align:middle;"></span> ' +
             (lang === 'ar' ? 'مراكز لصناعات متنوعة كبرى' : (lang === 'en' ? 'Major diversified industry poles' : 'Pôles majeurs diversifiés')) + '</div>';
     html += '<hr style="margin:8px 0; border:0; border-top:1px solid #ddd;">';
     html += '<div style="font-size:0.82rem; color:#444; line-height:1.6;">' +
-            '<span style="margin-right:8px;">● ' + (lang === 'ar' ? 'صلب' : (lang === 'en' ? 'Steel' : 'Acier')) + '</span>' +
-            '<span style="margin-right:8px;">▲ ' + (lang === 'ar' ? 'كيماويات' : (lang === 'en' ? 'Chemical' : 'Chimie')) + '</span>' +
-            '<span style="margin-right:8px;">★ ' + (lang === 'ar' ? 'ميكانيك' : (lang === 'en' ? 'Mechanical' : 'Mécanique')) + '</span>' +
-            '<span>◆ ' + (lang === 'ar' ? 'تكنولوجيا' : (lang === 'en' ? 'High-Tech' : 'High-tech')) + '</span>' +
+            '<span style="margin-right:8px; cursor:pointer;" onclick="window.highlightMapLayer(\'industrial\', \'steel\')" title="Click to view">● ' + (lang === 'ar' ? 'صلب' : (lang === 'en' ? 'Steel' : 'Acier')) + '</span>' +
+            '<span style="margin-right:8px; cursor:pointer;" onclick="window.highlightMapLayer(\'industrial\', \'chemical\')" title="Click to view">▲ ' + (lang === 'ar' ? 'كيماويات' : (lang === 'en' ? 'Chemical' : 'Chimie')) + '</span>' +
+            '<span style="margin-right:8px; cursor:pointer;" onclick="window.highlightMapLayer(\'industrial\', \'mechanical\')" title="Click to view">★ ' + (lang === 'ar' ? 'ميكانيك' : (lang === 'en' ? 'Mechanical' : 'Mécanique')) + '</span>' +
+            '<span style="cursor:pointer;" onclick="window.highlightMapLayer(\'industrial\', \'hightech\')" title="Click to view">◆ ' + (lang === 'ar' ? 'تكنولوجيا' : (lang === 'en' ? 'High-Tech' : 'High-tech')) + '</span>' +
             '</div>';
 
     div.innerHTML = html;
@@ -482,14 +547,16 @@
 
     var currentLang = getCurrentLang();
     var layerLabels = {
-      voyager: currentLang === 'ar' ? 'خريطة تفاعلية (Voyager)' : (currentLang === 'en' ? 'Geographic Map (Voyager)' : 'Carte géographique (Voyager)'),
+      voyager: currentLang === 'ar' ? 'خريطة جوجل (Google Maps)' : (currentLang === 'en' ? 'Google Maps (Road)' : 'Carte géographique (Google)'),
       satellite: currentLang === 'ar' ? 'قمر صناعي (Satellite)' : (currentLang === 'en' ? 'Satellite Imagery' : 'Image Satellite'),
-      topo: currentLang === 'ar' ? 'تضاريس (Relief)' : (currentLang === 'en' ? 'Topography & Relief' : 'Relief Topographique')
+      hybrid: currentLang === 'ar' ? 'هجين (Hybrid)' : (currentLang === 'en' ? 'Hybrid (Sat + Roads)' : 'Hybride (Sat + Routes)'),
+      topo: currentLang === 'ar' ? 'تضاريس (Terrain)' : (currentLang === 'en' ? 'Topography & Relief' : 'Relief Topographique')
     };
 
     var baseMaps = {};
     baseMaps[layerLabels.voyager] = baseLayers.voyager;
     baseMaps[layerLabels.satellite] = baseLayers.satellite;
+    baseMaps[layerLabels.hybrid] = baseLayers.hybrid;
     baseMaps[layerLabels.topo] = baseLayers.topo;
 
     L.control.layers(baseMaps, null, { position: 'topright' }).addTo(agriculturalMap);
@@ -510,9 +577,12 @@
 
       polygon.on('mouseover', function () { this.setStyle({ fillOpacity: 0.78, weight: 3 }); });
       polygon.on('mouseout', function () { this.setStyle({ fillOpacity: 0.5, weight: 2 }); });
+      
+      window.mapLayers.agricultural[zone.id] = polygon;
     });
 
     // Add Rivers
+    window.mapLayers.agricultural['rivers'] = [];
     mapData.rivers.forEach(function (river) {
       var line = L.polyline(river.coords, {
         color: river.color,
@@ -522,9 +592,12 @@
       }).addTo(agriculturalMap);
 
       line.bindTooltip('<strong>' + river.name[currentLang] + '</strong>', { sticky: true });
+      
+      window.mapLayers.agricultural['rivers'].push(line);
     });
 
     // Add Oasis Points
+    window.mapLayers.agricultural['oasis'] = [];
     mapData.oasisPoints.forEach(function (oasis) {
       var oasisIcon = L.divIcon({
         className: 'custom-oasis-icon',
@@ -540,6 +613,8 @@
         '<span style="color:#333;">' + oasis.desc[currentLang] + '</span>' +
         '</div>'
       );
+      
+      window.mapLayers.agricultural['oasis'].push(marker);
     });
 
     // Add Legend
@@ -561,15 +636,15 @@
     var title = t.legendAgricultural || (lang === 'ar' ? 'المفتاح' : 'Légende');
 
     var html = '<h4>' + title + '</h4>';
-    html += '<div class="legend-item"><span style="background:#f39c12; width:16px; height:16px; display:inline-block; border-radius:3px; margin-right:8px; vertical-align:middle;"></span> ' +
+    html += '<div class="legend-item" style="cursor:pointer;" onclick="window.highlightMapLayer(\'agricultural\', \'pastoral\')"><span style="background:#f39c12; width:16px; height:16px; display:inline-block; border-radius:3px; margin-right:8px; vertical-align:middle;"></span> ' +
             (lang === 'ar' ? 'تربية الماشية في إطار الرعي الواسع' : (lang === 'en' ? 'Extensive pastoral & livestock grazing' : 'Élevage extensif et parcours pastoraux')) + '</div>';
-    html += '<div class="legend-item"><span style="background:#27ae60; width:16px; height:16px; display:inline-block; border-radius:3px; margin-right:8px; vertical-align:middle;"></span> ' +
+    html += '<div class="legend-item" style="cursor:pointer;" onclick="window.highlightMapLayer(\'agricultural\', \'grains\')"><span style="background:#27ae60; width:16px; height:16px; display:inline-block; border-radius:3px; margin-right:8px; vertical-align:middle;"></span> ' +
             (lang === 'ar' ? 'زراعة الحبوب بالتناوب مع الزراعات الصناعية' : (lang === 'en' ? 'Grains & industrial crops rotation' : 'Céréaliculture et cultures industrielles')) + '</div>';
-    html += '<div class="legend-item"><span style="background:#e74c3c; width:16px; height:16px; display:inline-block; border-radius:3px; margin-right:8px; vertical-align:middle;"></span> ' +
+    html += '<div class="legend-item" style="cursor:pointer;" onclick="window.highlightMapLayer(\'agricultural\', \'tropical\')"><span style="background:#e74c3c; width:16px; height:16px; display:inline-block; border-radius:3px; margin-right:8px; vertical-align:middle;"></span> ' +
             (lang === 'ar' ? 'زراعة مدارية وشبه مدارية (الأرز، الشاي...)' : (lang === 'en' ? 'Tropical & subtropical (rice, tea...)' : 'Agriculture tropicale & subtropicale (riz, thé...)')) + '</div>';
-    html += '<div class="legend-item"><span style="background:#1e8449; width:16px; height:16px; display:inline-block; border-radius:3px; margin-right:8px; vertical-align:middle;"></span> ' +
+    html += '<div class="legend-item" style="cursor:pointer;" onclick="window.highlightMapLayer(\'agricultural\', \'oasis\')"><span style="background:#1e8449; width:16px; height:16px; display:inline-block; border-radius:3px; margin-right:8px; vertical-align:middle;"></span> ' +
             (lang === 'ar' ? 'زراعة في الواحات (الصحاري الغربية)' : (lang === 'en' ? 'Oasis farming (Western deserts)' : 'Agriculture oasienne (déserts de l\'ouest)')) + '</div>';
-    html += '<div class="legend-item"><span style="background:#2980b9; height:3px; width:16px; display:inline-block; margin-right:8px; vertical-align:middle;"></span> ' +
+    html += '<div class="legend-item" style="cursor:pointer;" onclick="window.highlightMapLayer(\'agricultural\', \'rivers\')"><span style="background:#2980b9; height:3px; width:16px; display:inline-block; margin-right:8px; vertical-align:middle;"></span> ' +
             (lang === 'ar' ? 'الأنهار الكبرى (يانغتسي، هوانغ هو)' : (lang === 'en' ? 'Major Rivers (Yangtze, Yellow River)' : 'Grands fleuves (Yangtsé, Huang He)')) + '</div>';
 
     div.innerHTML = html;
